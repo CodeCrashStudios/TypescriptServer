@@ -1,0 +1,4 @@
+/node_modules
+/dist
+/Videos
+.env
