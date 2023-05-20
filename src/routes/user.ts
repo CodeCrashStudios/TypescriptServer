@@ -11,6 +11,7 @@ router.get('/user', async (req: Request, res: Response) => {
 
     let result = connection.query("SELECT * FROM users");
 
+
     res.render('user', {users: (await result as Array<any>)[0]});
 });
 
@@ -54,6 +55,8 @@ router.post('/createuser', async (req: Request, res: Response) => {
         let entries = await connection.query('INSERT INTO users (username, hash, description) VALUES (?, ?, ?);', [username, await hash, description]);
         res.redirect("user/"+(entries as Array<any>)[0].insertId);
     }
+    
+
 });
 
 /**
