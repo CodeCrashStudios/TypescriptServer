@@ -1,8 +1,8 @@
 import express from 'express';
 
-import {router as defaultRouter} from './routes/default.js';
-import {router as userRoute} from './routes/user.js';
-import {router as videoRoute} from './routes/video.js';
+import {router as defaultRouter} from './routes/default';
+import {router as userRoute} from './routes/user';
+import {router as videoRoute} from './routes/video';
 
 export const routes = express.Router();
 

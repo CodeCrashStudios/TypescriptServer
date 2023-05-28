@@ -3,7 +3,7 @@ import bodyparser from 'body-parser';
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import {routes} from './routes.js'
+import {routes} from './routes'
 
 dotenv.config();
 
@@ -11,13 +11,12 @@ const app: Express = express();
 
 const port: string = process.env.PORT as string || '3000';
 
-export const connection = await mysql.createConnection({
+export let connection: Promise<mysql.Connection> = async (): Promise<mysql.Connection> =>  {await mysql.createConnection({
     host: process.env.HOST as string,
     user: process.env.USER as string,
     password: process.env.PASSWORD as string,
     database: process.env.DATABASE as string
-});
-+
+})};
 
 connection.connect();
 

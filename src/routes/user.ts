@@ -1,6 +1,7 @@
 import express, { Request, Response} from 'express';
 import bcrypt from 'bcrypt';
-import {connection} from '../index.js';
+import {connection} from '../index';
+import {v4 as uuid} from 'uuid';
 
 export const router = express.Router();
 
@@ -20,7 +21,7 @@ router.get('/user', async (req: Request, res: Response) => {
  */
 router.get('/user/:id', async (req: Request, res: Response) => {
 
-    let result = await connection.query("SELECT * FROM users WHERE id =?", req.params.id);
+    let result = await connection.query("SELECT * FROM users WHERE id = uuid_to_bin(?)", req.params.id);
 
     let user = (result as Array<any>)[0][0];
 
@@ -46,13 +47,14 @@ router.post('/createuser', async (req: Request, res: Response) => {
 
     //Starts creating the password hash asyncrously while it checks if the user already exists.
     let hash = bcrypt.hash(password, 13);
+    let id = uuid();
 
     let usersWithName = await connection.query("SELECT * FROM users WHERE username = ?", username);
 
     if((usersWithName[0] as Array<any>).length > 0){
         res.send("Username already exists");
     } else {
-        let entries = await connection.query('INSERT INTO users (username, hash, description) VALUES (?, ?, ?);', [username, await hash, description]);
+        let entries = await connection.query('INSERT INTO users (id, username, hash, description) VALUES (uuid_to_bin(?), ?, ?, ?);', [id, username, await hash, description]);
         res.redirect("user/"+(entries as Array<any>)[0].insertId);
     }
     
